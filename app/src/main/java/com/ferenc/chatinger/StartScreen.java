@@ -21,6 +21,6 @@ public class StartScreen extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 4000);
     }
 }
