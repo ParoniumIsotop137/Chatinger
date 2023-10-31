@@ -66,12 +66,12 @@ public class Registration extends AppCompatActivity {
                         else{
                             password.setError("!");
                             password2.setError("!");
-                            Toast.makeText(Registration.this,"Passwörter stimmen nicht überein!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Registration.this,"Kennwörter stimmen nicht überein!", Toast.LENGTH_LONG).show();
                         }
                     }
                     else{
                         password.setError("!");
-                        Toast.makeText(Registration.this,"Passwort muss mindestens 8 Zeichnen lang sein!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Registration.this,"Kennwort muss mindestens 8 Zeichnen lang sein!", Toast.LENGTH_LONG).show();
                     }
 
 
