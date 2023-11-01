@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/common_google_signin_btn_text_light_pressed"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/_60sdp">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">

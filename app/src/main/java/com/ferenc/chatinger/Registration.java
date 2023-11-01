@@ -40,7 +40,7 @@ public class Registration extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
 
         fauth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance("https://chatinger-d3269-default-rtdb.europe-west1.firebasedatabase.app/");
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

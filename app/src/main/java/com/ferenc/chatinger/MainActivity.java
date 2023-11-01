@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         users = new ArrayList<User>();
-        dBase = FirebaseDatabase.getInstance();
+        dBase = FirebaseDatabase.getInstance("https://chatinger-d3269-default-rtdb.europe-west1.firebasedatabase.app/");
         fauth = FirebaseAuth.getInstance();
         uAdapter = new UserAdapter(MainActivity.this, users);
 
