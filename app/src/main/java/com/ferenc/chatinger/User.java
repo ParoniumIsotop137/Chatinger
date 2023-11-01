@@ -61,5 +61,14 @@ public class User {
         this.lastMessage = lastMessage;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + userName + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", password='" + password + '\'' +
+                ", userID='" + userID + '\'' +
+                ", lastMessage='" + lastMessage + '\'' +
+                '}';
+    }
 }
