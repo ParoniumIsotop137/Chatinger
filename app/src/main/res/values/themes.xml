@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.Chatinger" parent="Base.Theme.Chatinger" />
+
+
+
+    <style name="Dialog">
+        <item name="android:windowBackground">@color/white</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowMinWidthMajor">80%</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+
 </resources>

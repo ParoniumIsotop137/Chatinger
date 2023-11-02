@@ -6,8 +6,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,11 +30,14 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase dBase;
 
     ArrayList<User> users;
+
+    ImageButton btnStartChat, btnLogout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnLogout = findViewById(R.id.btnLogout);
         users = new ArrayList<User>();
         dBase = FirebaseDatabase.getInstance("https://chatinger-d3269-default-rtdb.europe-west1.firebasedatabase.app/");
         fauth = FirebaseAuth.getInstance();
@@ -66,7 +73,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                Dialog dialog = new Dialog(MainActivity.this, R.style.Dialog);
+                dialog.setContentView(R.layout.dialog);
+
+                Button yes, no;
+                yes = dialog.findViewById(R.id.btnYes);
+                no = dialog.findViewById(R.id.btnNo);
+
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(MainActivity.this, Login.class);
+                        startActivity(intent);
+                    }
+                });
+
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+
+
+            }
+        });
 
 
 
