@@ -1,6 +1,7 @@
 package com.ferenc.chatinger;
 
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.viewHolder> {
 
         User user = users.get(position);
         holder.userName.setText(user.getUserName());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mainActivity, ChatView.class);
+                intent.putExtra("userName", user.getUserName());
+                intent.putExtra("userID", user.getUserID());
+                mainActivity.startActivity(intent);
+
+            }
+        });
 
 
     }
