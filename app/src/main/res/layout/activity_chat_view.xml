@@ -16,7 +16,7 @@
 
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/userNameChv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/msgAdapter"
+        android:id="@+id/msgAdapterCHV"
         android:layout_width="match_parent"
         android:layout_height="502dp"
         android:layout_below="@+id/ll1"
@@ -74,7 +74,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/btnSend"
+            android:id="@+id/btnSendChV"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
             android:layout_marginTop="@dimen/_5sdp"
