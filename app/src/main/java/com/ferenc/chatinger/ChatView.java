@@ -89,7 +89,7 @@ public class ChatView extends AppCompatActivity {
                     MessageModell mdlMessages = item.getValue(MessageModell.class);
                     messageList.add(mdlMessages);
                 }
-                Log.d("MessageListSize", String.valueOf(messageList.size())); // Fügen Sie diesen Log hinzu
+
                 adapter.notifyDataSetChanged();
             }
 
