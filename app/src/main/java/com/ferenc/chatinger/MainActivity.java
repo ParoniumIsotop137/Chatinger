@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnLogout = findViewById(R.id.btnLogout);
-        users = new ArrayList<User>();
+        users = new ArrayList<>();
         dBase = FirebaseDatabase.getInstance("https://chatinger-d3269-default-rtdb.europe-west1.firebasedatabase.app/");
         fauth = FirebaseAuth.getInstance();
         uAdapter = new UserAdapter(MainActivity.this, users);
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
                 for (DataSnapshot item : snapshot.getChildren()) {
 
-                    System.out.println(item.getValue(User.class).toString());
+
 
                     User user = item.getValue(User.class);
 
