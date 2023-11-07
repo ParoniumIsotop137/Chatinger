@@ -50,4 +50,19 @@
         app:layout_constraintVertical_bias="0.951"
         app:srcCompat="@drawable/logout" />
 
+    <TextView
+        android:id="@+id/txtLoginName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/autour_one"
+        android:text="User"
+        android:textColor="#162578"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.246" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

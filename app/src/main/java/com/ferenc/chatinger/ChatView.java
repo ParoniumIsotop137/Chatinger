@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -74,8 +71,8 @@ public class ChatView extends AppCompatActivity {
         uName = findViewById(R.id.userNameChv);
         uName.setText(partnerName);
 
-        senderRoom = senderID+partnerID;
-        partnerRoom = partnerID+senderID;
+        senderRoom = senderID + partnerID;
+        partnerRoom = partnerID + senderID;
 
         chatReference = dBase.getReference().child("chats").child(senderRoom).child("messages");
 
@@ -85,7 +82,7 @@ public class ChatView extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 messageList.clear();
                 for (DataSnapshot item : snapshot.getChildren()
-                     ) {
+                ) {
                     MessageModell mdlMessages = item.getValue(MessageModell.class);
                     messageList.add(mdlMessages);
                 }
@@ -103,7 +100,7 @@ public class ChatView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(TextUtils.isEmpty(message.getText().toString())){
+                if (TextUtils.isEmpty(message.getText().toString())) {
 
                     Toast.makeText(ChatView.this, "Schreibe zuerst eine Nachricht!", Toast.LENGTH_SHORT).show();
 
@@ -129,3 +126,4 @@ public class ChatView extends AppCompatActivity {
         });
     }
 }
+

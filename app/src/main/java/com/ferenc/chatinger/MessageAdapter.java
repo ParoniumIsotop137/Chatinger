@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ferenc.chatinger.R;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 
@@ -20,9 +19,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context context;
     private ArrayList<MessageModell> msgAdapterList;
 
+
     public MessageAdapter(Context context, ArrayList<MessageModell> msgAdapterList) {
         this.context = context;
         this.msgAdapterList = msgAdapterList;
+
     }
 
     @NonNull
@@ -70,6 +71,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+
     static class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView message;
 
@@ -87,4 +89,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             message = itemView.findViewById(R.id.partnerText);
         }
     }
+
+
 }
