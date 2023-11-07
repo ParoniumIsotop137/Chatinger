@@ -14,6 +14,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -30,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth fauth;
     RecyclerView userList;
@@ -40,9 +41,10 @@ public class MainActivity extends AppCompatActivity{
     ArrayList<User> users;
     private static String userName;
 
-    private ValueEventListener messageListener;
     private static final String CHANNEL_ID = "+r+%8QXJ($!C$q%n";
     ImageButton btnLogout;
+
+    private static MediaPlayer soundPlayer = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +58,7 @@ public class MainActivity extends AppCompatActivity{
         fauth = FirebaseAuth.getInstance();
         uAdapter = new UserAdapter(MainActivity.this, users);
 
-        createNotificationChannel();
-
         DatabaseReference reference = dBase.getReference().child("user");
-
-        messageListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    sendNotification();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
 
         userList = findViewById(R.id.mainUserList);
         userList.setLayoutManager(new LinearLayoutManager(this));
@@ -88,11 +74,9 @@ public class MainActivity extends AppCompatActivity{
                 for (DataSnapshot item : snapshot.getChildren()) {
 
                     User user = item.getValue(User.class);
-                    if(!user.getUserName().equals(userName)){
+                    if (!user.getUserName().equals(userName)) {
                         users.add(user);
                     }
-
-
                 }
                 uAdapter.notifyDataSetChanged();
             }
@@ -165,36 +149,6 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Chatinger channel";
-            String description = "Chatinger Nachrichten";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 
-    public void sendNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("New Message")
-                .setContentText("You have a new message")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        notificationManager.notify(0, builder.build());
-    }
 
 }

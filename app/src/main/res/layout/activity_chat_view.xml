@@ -26,6 +26,24 @@
             android:textColor="#FFC107"
             android:textSize="20sp" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnBackCHV"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_gravity="left"
+            android:layout_marginTop="-45dp"
+            app:cardBackgroundColor="#FFEB3B"
+            app:cardCornerRadius="@dimen/_25sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center"
+                android:background="@drawable/back_icon" />
+
+
+        </androidx.cardview.widget.CardView>
+
 
     </LinearLayout>
 

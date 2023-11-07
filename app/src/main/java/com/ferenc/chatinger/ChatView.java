@@ -6,9 +6,11 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +31,7 @@ public class ChatView extends AppCompatActivity {
 
     String partnerID, partnerName, senderID, senderRoom, partnerRoom;
     TextView uName;
-    CardView btnSend;
+    CardView btnSend, btnBack;
     EditText message;
 
     FirebaseAuth fauth;
@@ -59,9 +61,11 @@ public class ChatView extends AppCompatActivity {
 
         btnSend = findViewById(R.id.btnSendChV);
         message = findViewById(R.id.txtMessage);
+        btnBack = findViewById(R.id.btnBackCHV);
 
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
         lyManager.setStackFromEnd(true);
+        lyManager.isSmoothScrollbarEnabled();
 
         //View view = LayoutInflater.from(ChatView.this).inflate(R.layout.activity_chat_view, null);
         msgAdapter = findViewById(R.id.msgAdCHV);
@@ -105,7 +109,7 @@ public class ChatView extends AppCompatActivity {
                     Toast.makeText(ChatView.this, "Schreibe zuerst eine Nachricht!", Toast.LENGTH_SHORT).show();
 
                 }
-
+                scrollToBottom(view);
                 String msg = message.getText().toString();
                 message.setText("");
                 Date date = new Date();
@@ -117,13 +121,29 @@ public class ChatView extends AppCompatActivity {
                         dBase.getReference().child("chats").child(partnerRoom).child("messages").push().setValue(modell).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-
+                                scrollToBottom(view);
                             }
                         });
                     }
                 });
             }
         });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChatView.super.onBackPressed();
+            }
+        });
+    }
+
+
+    private void scrollToBottom(View view) {
+
+        msgAdapter.scrollToPosition(messageList.size() -1);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
     }
 }
 
