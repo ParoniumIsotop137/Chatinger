@@ -1,100 +1,110 @@
 package com.ferenc.chatinger;
 
-
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+
 
 import java.util.ArrayList;
 
-public class MessageAdapter extends RecyclerView.Adapter {
 
-    Context context;
-    ArrayList<MessageModell> msgAdapterList;
+public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    int ITEM_SEND = 1;
-    int ITEM_RECEIVE = 2;
+    private static final int VIEW_TYPE_SENDER = 1;
+    private static final int VIEW_TYPE_PARTNER = 2;
+
+    private Context context;
+    private ArrayList<MessageModell> msgAdapterList;
 
 
-    public MessageAdapter(Context context, ArrayList<MessageModell> msgAdapterList) {
+
+    String partnerID;
+
+    public MessageAdapter(Context context, ArrayList<MessageModell> msgAdapterList, String partnerID) {
         this.context = context;
         this.msgAdapterList = msgAdapterList;
+        this.partnerID = partnerID;
+
+
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        if(viewType == ITEM_SEND){
-            View view = LayoutInflater.from(context).inflate(R.layout.sender_layout, parent, false);
+        View view;
+        if (viewType == VIEW_TYPE_SENDER) {
+            view = LayoutInflater.from(context).inflate(R.layout.sender_layout, parent, false);
             return new SenderViewHolder(view);
-        }
-        else{
-            View view = LayoutInflater.from(context).inflate(R.layout.partner_layout, parent, false);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.partner_layout, parent, false);
             return new PartnerViewHolder(view);
         }
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        MessageModell message = msgAdapterList.get(position);
 
-        MessageModell messages = msgAdapterList.get(position);
-
-        if(holder.getClass() == SenderViewHolder.class){
-            SenderViewHolder viewHolder = (SenderViewHolder) holder;
-            viewHolder.message.setText(messages.getMessage());
-        }
-        else{
-            PartnerViewHolder viewHolder = (PartnerViewHolder) holder;
-            viewHolder.message.setText(messages.getMessage());
-        }
-
-    }
-
-    public int getItemViewType(int position){
-        MessageModell messages = msgAdapterList.get(position);
-
-        if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(messages.getSenderID())){
-            return ITEM_SEND;
-        }
-        else{
-            return ITEM_RECEIVE;
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_SENDER:
+                SenderViewHolder senderViewHolder = (SenderViewHolder) holder;
+                senderViewHolder.message.setText(message.getMessage());
+                break;
+            case VIEW_TYPE_PARTNER:
+                PartnerViewHolder partnerViewHolder = (PartnerViewHolder) holder;
+                partnerViewHolder.message.setText(message.getMessage());
+                break;
         }
     }
+
+
 
     @Override
     public int getItemCount() {
-        return 0;
+        return msgAdapterList.size();
     }
-}
-class SenderViewHolder extends RecyclerView.ViewHolder {
 
-    TextView partnerName;
-    TextView message;
+    @Override
+    public int getItemViewType(int position) {
+        MessageModell message = msgAdapterList.get(position);
 
-    public SenderViewHolder(@NonNull View itemView) {
-        super(itemView);
-
-        message = itemView.findViewById(R.id.senderText);
+        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(message.getSenderID())) {
+            return VIEW_TYPE_SENDER;
+        } else {
+            return VIEW_TYPE_PARTNER;
+        }
     }
-}
 
-class PartnerViewHolder extends RecyclerView.ViewHolder {
+    static class SenderViewHolder extends RecyclerView.ViewHolder {
+        TextView message;
 
-    TextView partnerName;
-    TextView message;
-
-    public PartnerViewHolder(@NonNull View itemView) {
-        super(itemView);
-
-        message = itemView.findViewById(R.id.partnerText);
+        SenderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            message = itemView.findViewById(R.id.senderText);
+        }
     }
+
+    static class PartnerViewHolder extends RecyclerView.ViewHolder {
+        TextView message;
+
+        PartnerViewHolder(@NonNull View itemView) {
+            super(itemView);
+            message = itemView.findViewById(R.id.partnerText);
+        }
+    }
+
+
 }
