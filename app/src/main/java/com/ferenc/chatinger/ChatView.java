@@ -81,11 +81,10 @@ public class ChatView extends AppCompatActivity {
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
         lyManager.setStackFromEnd(true);
 
-
-        //View view = LayoutInflater.from(ChatView.this).inflate(R.layout.activity_chat_view, null);
         msgAdapter = findViewById(R.id.msgAdCHV);
         msgAdapter.setLayoutManager(lyManager);
         msgAdapter.setAdapter(adapter);
+
 
         uName = findViewById(R.id.userNameChv);
         uName.setText(partnerName);
@@ -107,6 +106,7 @@ public class ChatView extends AppCompatActivity {
                 }
 
                 adapter.notifyDataSetChanged();
+                scrollToBottom();
             }
 
             @Override
@@ -147,7 +147,7 @@ public class ChatView extends AppCompatActivity {
                         Toast.makeText(ChatView.this, "Schreibe zuerst eine Nachricht!", Toast.LENGTH_SHORT).show();
 
                     }
-                    scrollToBottom(view);
+                hideKeyBoard(view);
 
                     msg = message.getText().toString();
                     message.setText("");
@@ -178,13 +178,18 @@ public class ChatView extends AppCompatActivity {
     }
 
 
-    private void scrollToBottom(View view) {
+    private void hideKeyBoard(View view) {
 
-        msgAdapter.scrollToPosition(messageList.size() -1);
+
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
     }
+
+    private void scrollToBottom() {
+        msgAdapter.scrollToPosition(messageList.size() - 1);
+    }
+
 
 
 }
