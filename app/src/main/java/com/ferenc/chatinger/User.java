@@ -7,17 +7,18 @@ public class User {
     private String userEmail;
     private String password;
     private String userID;
-    private String lastMessage;
+    private String userToken;
 
     public User(){
 
     }
 
-    public User(String userName, String userEmail, String password, String userID) {
+    public User(String userName, String userEmail, String password, String userID, String userToken) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.password = password;
         this.userID = userID;
+        this.userToken = userToken;
 
     }
 
@@ -53,12 +54,12 @@ public class User {
         this.userID = userID;
     }
 
-    public String getLastMessage() {
-        return lastMessage;
+    public String getUserToken() {
+        return userToken;
     }
 
-    public void setLastMessage(String lastMessage) {
-        this.lastMessage = lastMessage;
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class User {
                 ", userEmail='" + userEmail + '\'' +
                 ", password='" + password + '\'' +
                 ", userID='" + userID + '\'' +
-                ", lastMessage='" + lastMessage + '\'' +
+                ", userToken='" + userToken + '\'' +
                 '}';
     }
 }

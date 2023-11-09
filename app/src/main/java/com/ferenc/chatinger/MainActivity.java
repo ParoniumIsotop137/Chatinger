@@ -1,5 +1,18 @@
 package com.ferenc.chatinger;
 
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -8,26 +21,17 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -40,16 +44,17 @@ public class MainActivity extends AppCompatActivity {
     TextView loginName;
     ArrayList<User> users;
     private static String userName;
+    private static String token;
 
-    private static final String CHANNEL_ID = "+r+%8QXJ($!C$q%n";
     ImageButton btnLogout;
 
-    private static MediaPlayer soundPlayer = new MediaPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         btnLogout = findViewById(R.id.btnLogout);
         users = new ArrayList<>();
@@ -63,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         userList = findViewById(R.id.mainUserList);
         userList.setLayoutManager(new LinearLayoutManager(this));
         userList.setAdapter(uAdapter);
-
 
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
 
     }
 

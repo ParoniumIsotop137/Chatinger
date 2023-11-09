@@ -1,5 +1,6 @@
 package com.ferenc.chatinger;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+
+
 import java.util.ArrayList;
+
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -20,9 +30,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ArrayList<MessageModell> msgAdapterList;
 
 
-    public MessageAdapter(Context context, ArrayList<MessageModell> msgAdapterList) {
+
+    String partnerID;
+
+    public MessageAdapter(Context context, ArrayList<MessageModell> msgAdapterList, String partnerID) {
         this.context = context;
         this.msgAdapterList = msgAdapterList;
+        this.partnerID = partnerID;
+
 
     }
 
@@ -55,6 +70,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+
+
     @Override
     public int getItemCount() {
         return msgAdapterList.size();
@@ -70,7 +87,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return VIEW_TYPE_PARTNER;
         }
     }
-
 
     static class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView message;

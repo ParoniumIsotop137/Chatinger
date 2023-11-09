@@ -1,14 +1,19 @@
 package com.ferenc.chatinger;
 
+import static com.google.firebase.messaging.RemoteMessage.*;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -23,6 +28,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,19 +53,26 @@ public class ChatView extends AppCompatActivity {
 
     DatabaseReference chatReference;
 
+    DatabaseReference partnerRef;
+
+    private String msg;
+
+    private NotificationSender sender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_view);
-
         fauth = FirebaseAuth.getInstance();
         dBase = FirebaseDatabase.getInstance("https://chatinger-d3269-default-rtdb.europe-west1.firebasedatabase.app/");
 
         messageList = new ArrayList<>();
-        adapter = new MessageAdapter(ChatView.this, messageList);
+
         partnerName = getIntent().getStringExtra("userName");
         partnerID = getIntent().getStringExtra("userID");
         senderID = fauth.getUid();
+
+        adapter = new MessageAdapter(ChatView.this, messageList, partnerID);
 
         btnSend = findViewById(R.id.btnSendChV);
         message = findViewById(R.id.txtMessage);
@@ -65,7 +80,7 @@ public class ChatView extends AppCompatActivity {
 
         LinearLayoutManager lyManager = new LinearLayoutManager(this);
         lyManager.setStackFromEnd(true);
-        lyManager.isSmoothScrollbarEnabled();
+
 
         //View view = LayoutInflater.from(ChatView.this).inflate(R.layout.activity_chat_view, null);
         msgAdapter = findViewById(R.id.msgAdCHV);
@@ -79,7 +94,7 @@ public class ChatView extends AppCompatActivity {
         partnerRoom = partnerID + senderID;
 
         chatReference = dBase.getReference().child("chats").child(senderRoom).child("messages");
-
+        partnerRef = dBase.getReference().child("chats").child(partnerRoom).child("messages");
 
         chatReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -99,34 +114,59 @@ public class ChatView extends AppCompatActivity {
 
             }
         });
+        partnerRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+
+                    MessageModell lastMessage = null;
+                    for (DataSnapshot item : snapshot.getChildren()) {
+                        lastMessage = item.getValue(MessageModell.class);
+                    }
+                    if (lastMessage != null && lastMessage.getSenderID().equals(partnerID)) {
+                        sender = new NotificationSender(getApplicationContext(), "Chatinger", "Du hast neue Nachrichten erhalten!");
+                        sender.sendNotification();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (TextUtils.isEmpty(message.getText().toString())) {
+                    if (TextUtils.isEmpty(message.getText().toString())) {
 
-                    Toast.makeText(ChatView.this, "Schreibe zuerst eine Nachricht!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChatView.this, "Schreibe zuerst eine Nachricht!", Toast.LENGTH_SHORT).show();
+
+                    }
+                    scrollToBottom(view);
+
+                    msg = message.getText().toString();
+                    message.setText("");
+                    Date date = new Date();
+                    MessageModell modell = new MessageModell(msg, senderID, date.getTime());
+
+                    dBase.getReference().child("chats").child(senderRoom).child("messages").push().setValue(modell).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            dBase.getReference().child("chats").child(partnerRoom).child("messages").push().setValue(modell).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                        }
+                    });
 
                 }
-                scrollToBottom(view);
-                String msg = message.getText().toString();
-                message.setText("");
-                Date date = new Date();
-                MessageModell modell = new MessageModell(msg, senderID, date.getTime());
-
-                dBase.getReference().child("chats").child(senderRoom).child("messages").push().setValue(modell).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        dBase.getReference().child("chats").child(partnerRoom).child("messages").push().setValue(modell).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                scrollToBottom(view);
-                            }
-                        });
-                    }
-                });
-            }
         });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -145,5 +185,7 @@ public class ChatView extends AppCompatActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
     }
+
+
 }
 
